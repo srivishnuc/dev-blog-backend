@@ -6,7 +6,7 @@ const getUserDetails = (req, res) => {
 
 
 const addUserDetails = (req, res) => {
-    addUserModel(res, res)
+    addUserModel(req, res)
 }
 
 

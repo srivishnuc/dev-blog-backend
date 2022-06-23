@@ -2,9 +2,14 @@ const { executeQuery } = require('./db/connection.js')
 
 const addUserModel = async (req, res) => {
     const { username, email, phone, password } = req.body
-    const dbResponse = await executeQuery(`Insert into users(username,password,email,phone) values ($1 $2 $3 $4 )`, [username, password, email, phone])
-    const statusCode = dbResponse.status === 'success' ? 200 : 400
-    res.sendStatus(statusCode).send(dbResponse)
+    let dbResponse
+    try {
+        dbResponse = await executeQuery(`Insert into users(username,password,email,phone) values ($1 $2 $3 $4 )`, [username, password, email, phone])
+        res.sendStatus(200).send(dbResponse)
+    } catch (err) {
+        res.send(err)
+    }
+
 }
 
 

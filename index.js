@@ -8,21 +8,10 @@ app.use(bodyParser.json())
 
 require('dotenv').config()
 
-app.get('/', (req, res) => {
-    res.send('<h1>Api Test<h1>')
-})
-
-app.listen(5000, () => {
-    console.log(`App listening at 5000`)
-})
-
-const port = process.env.PORT || 6000
 
 const users = require('./users/router')
-const blogs = require('./blogs/router')
-
+//const blogs = require('./blogs/router')
 
 app.use('/user', users)
 
-
-app.listen(port, () => console.log(`App running at http://localhost:${port}`))
+app.listen(process.env.PORT, () => console.log(`App running at http://localhost:${process.env.PORT}`))
