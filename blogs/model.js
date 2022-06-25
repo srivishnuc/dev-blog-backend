@@ -31,4 +31,26 @@ const selectAllBlogModel = async (req, res) => {
     }
 }
 
-module.exports = { addBlogModel, selectBlogModel, selectAllBlogModel }
+const addUserCommentModel = async (req, res) => {
+    try {
+        const { blogid, comment } = req.body
+        const { userid } = req
+        const dbResponse = await executeQuery(`insert into comments(blogid,userid,comment,active) values($1,$2,$3,$4)`, [blogid, userid, comment, 'Y'])
+        res.status(200).send(dbResponse)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+}
+
+const addUserLikeModel = async (req, res) => {
+    try {
+        const { blogid } = req.body
+        const { userid } = req
+        const dbResponse = await executeQuery(`insert into likes(blogid,userid,active) values($1,$2,$3)`, [blogid, userid, 'Y'])
+        res.status(200).send(dbResponse)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+}
+
+module.exports = { addBlogModel, selectBlogModel, selectAllBlogModel, addUserCommentModel, addUserLikeModel }

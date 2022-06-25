@@ -1,4 +1,4 @@
-const { addBlogModel, selectBlogModel, selectAllBlogModel } = require('./model')
+const { addBlogModel, selectBlogModel, selectAllBlogModel, addUserCommentModel, addUserLikeModel } = require('./model')
 
 const addBlog = (req, res) => {
     addBlogModel(req, res)
@@ -12,4 +12,12 @@ const selectAllBlog = (req, res) => {
     selectAllBlogModel(req, res)
 }
 
-module.exports = { addBlog, selectBlog, selectAllBlog }
+const addUserComment = (req, res) => {
+    addUserCommentModel(req, res)
+}
+
+const addUserLike = (req, res) => {
+    addUserLikeModel(req, res)
+}
+
+module.exports = { addBlog, selectBlog, selectAllBlog, addUserComment, addUserLike }
