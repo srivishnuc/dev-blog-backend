@@ -1,9 +1,13 @@
-const Pool = require('pg').Pool
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
+const { Pool } = require('pg')
 
-const connectionString = process.env.DATABASE_URL
-const pool = new Pool({ connectionString: connectionString })
+
+require('dotenv').config()
+const connectionString = `postgresql://${process.env.PGUSER}:${process.env.PASSWORD}@${process.env.HOST}:5656/${process.env.DATABASE}`
+const isProduction = process.env.NODE_ENV === 'production'
+const pool = new Pool({
+    connectionString: isProduction ? process.env.DATABASE_URL : connectionString,
+    ssl: isProduction
+})
 
 
 const executeQuery = (query, params) => {

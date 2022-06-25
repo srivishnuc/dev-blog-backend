@@ -3,7 +3,7 @@ const { getUserDetails, addUserDetails } = require('./controller.js')
 
 
 
-router.get('/userDetails', getUserDetails)
+router.put('/userDetails', getUserDetails)
 router.post('/addUser', addUserDetails)
 
 
