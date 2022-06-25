@@ -9,7 +9,8 @@ app.use(bodyParser.json())
 const checkJwtToken = (req, res, next) => {
     let isRegister = req.method === 'POST' && (req.url == '/user/addUser' || req.url == '/user/addUser/')
     let isLogin = req.method === 'PUT' && (req.url == '/user/userDetails' || req.url == '/user/userDetails/')
-    if (isRegister || isLogin)
+    let isBlog = req.method === 'GET' && req.url.includes('/blogs')
+    if (isRegister || isLogin || isBlog)
         next()
     else {
         const { authorization } = req.headers

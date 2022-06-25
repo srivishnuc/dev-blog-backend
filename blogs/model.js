@@ -12,5 +12,23 @@ const addBlogModel = async (req, res) => {
     }
 }
 
+const selectBlogModel = async (req, res) => {
+    const { blogid } = req.query
+    try {
+        const dbResponse = await executeQuery(`select row_to_json(blog) as selectedBlog from (select blogid,header,content from blogs)blog where blogid = $1`, [blogid])
+        res.status(200).send(dbResponse)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+}
 
-module.exports = { addBlogModel }
+const selectAllBlogModel = async (req, res) => {
+    try {
+        const dbResponse = await executeQuery(`select row_to_json(blog) as Blog from (select blogid,header,content from blogs order by created_date desc , blogid desc)blog`, [])
+        res.status(200).send(dbResponse)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+}
+
+module.exports = { addBlogModel, selectBlogModel, selectAllBlogModel }
