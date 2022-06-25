@@ -7,8 +7,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const checkJwtToken = (req, res, next) => {
-    let isRegister = req.method === 'POST' && (req.url == '/user/addUser' || req.url == '/user/addUser/');
-    let isLogin = req.method === 'PUT' && (req.url == '/user/userDetails' || req.url == '/user/userDetails/');
+    let isRegister = req.method === 'POST' && (req.url == '/user/addUser' || req.url == '/user/addUser/')
+    let isLogin = req.method === 'PUT' && (req.url == '/user/userDetails' || req.url == '/user/userDetails/')
     if (isRegister || isLogin)
         next()
     else {
@@ -22,7 +22,6 @@ const checkJwtToken = (req, res, next) => {
             }
         })
     }
-
 }
 app.use(checkJwtToken)
 
@@ -33,3 +32,5 @@ app.use('/user', users)
 app.use('/blogs', blogs)
 
 app.listen(process.env.PORT, () => console.log(`App running at http://localhost:${process.env.PORT}`))
+
+
