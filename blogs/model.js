@@ -73,4 +73,26 @@ const getCommentsModel = async (req, res) => {
     }
 }
 
-module.exports = { addBlogModel, selectBlogModel, selectAllBlogModel, addUserCommentModel, addUserLikeModel, getLikeCountModel, getCommentsModel }
+
+const updateLikeModel = async (req, res) => {
+    const { blogid, status } = req.body
+    const { userid } = req
+    try {
+        const dbResponse = await executeQuery(`update likes set active = $1 where blogid = $2 and userid = $3`, [status, blogid, userid])
+        res.status(200).send(dbResponse)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+}
+
+const updateCommentModel = async (req, res) => {
+    const { blogid, status } = req.body
+    const { userid } = req
+    try {
+        const dbResponse = await executeQuery(`update comments set active = $1 where blogid = $1 and userid = $2`, [status, blogid, userid])
+        res.status(200).send(dbResponse)
+    } catch (err) {
+        res.status(400).send(err)
+    }
+}
+module.exports = { addBlogModel, selectBlogModel, selectAllBlogModel, addUserCommentModel, addUserLikeModel, getLikeCountModel, getCommentsModel, updateLikeModel, updateCommentModel }
