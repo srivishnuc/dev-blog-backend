@@ -33,9 +33,9 @@ const selectAllBlogModel = async (req, res) => {
 
 const addUserCommentModel = async (req, res) => {
     try {
-        const { blogid, comment } = req.body
+        const { blogid, comment, status } = req.body
         const { userid } = req
-        const dbResponse = await executeQuery(`insert into comments(blogid,userid,comment,active) values($1,$2,$3,$4)`, [blogid, userid, comment, 'Y'])
+        const dbResponse = await executeQuery(`call updatecomment($1,$2,$3,$4)`, [blogid, userid, status, comment])
         res.status(200).send(dbResponse)
     } catch (err) {
         res.status(400).send(err)
@@ -44,9 +44,9 @@ const addUserCommentModel = async (req, res) => {
 
 const addUserLikeModel = async (req, res) => {
     try {
-        const { blogid } = req.body
+        const { blogid, status } = req.body
         const { userid } = req
-        const dbResponse = await executeQuery(`insert into likes(blogid,userid,active) values($1,$2,$3)`, [blogid, userid, 'Y'])
+        const dbResponse = await executeQuery(`call updatelike($1,$2,$3)`, [blogid, userid, status])
         res.status(200).send(dbResponse)
     } catch (err) {
         res.status(400).send(err)
@@ -73,26 +73,4 @@ const getCommentsModel = async (req, res) => {
     }
 }
 
-
-const updateLikeModel = async (req, res) => {
-    const { blogid, status } = req.body
-    const { userid } = req
-    try {
-        const dbResponse = await executeQuery(`update likes set active = $1 where blogid = $2 and userid = $3`, [status, blogid, userid])
-        res.status(200).send(dbResponse)
-    } catch (err) {
-        res.status(400).send(err)
-    }
-}
-
-const updateCommentModel = async (req, res) => {
-    const { blogid, status } = req.body
-    const { userid } = req
-    try {
-        const dbResponse = await executeQuery(`update comments set active = $1 where blogid = $1 and userid = $2`, [status, blogid, userid])
-        res.status(200).send(dbResponse)
-    } catch (err) {
-        res.status(400).send(err)
-    }
-}
-module.exports = { addBlogModel, selectBlogModel, selectAllBlogModel, addUserCommentModel, addUserLikeModel, getLikeCountModel, getCommentsModel, updateLikeModel, updateCommentModel }
+module.exports = { addBlogModel, selectBlogModel, selectAllBlogModel, addUserCommentModel, addUserLikeModel, getLikeCountModel, getCommentsModel }

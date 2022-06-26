@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { addBlog, selectBlog, selectAllBlog, addUserComment, addUserLike, getLikeCount, getComments, updateLike, updateComment } = require('./controller')
+const { addBlog, selectBlog, selectAllBlog, addUserComment, addUserLike, getLikeCount, getComments } = require('./controller')
 
 router.post('/addBlog', addBlog)
 router.get('/', selectBlog)
@@ -8,7 +8,5 @@ router.put('/comment', addUserComment)
 router.put('/like', addUserLike)
 router.get('/likeCount', getLikeCount)
 router.get('/getComments', getComments)
-router.put('/updateLike', updateLike)
-router.put('/updateComment', updateComment)
 
 module.exports = router
