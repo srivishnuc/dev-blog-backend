@@ -13,7 +13,7 @@ const checkJwtToken = (req, res, next) => {
     if (isRegister || isLogin || isBlog)
         next()
     else {
-        const { authorization } = req.headers
+        const authorization = req.headers.authorization.split(' ')[1]
         jwt.verify(authorization, process.env.TOKEN_SECRET, (err, decoded) => {
             if (err) {
                 res.status(400).send({ status: 'failed', msg: 'Un-authorized' })
