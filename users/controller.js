@@ -1,4 +1,4 @@
-const { getUserModel, addUserModel } = require('./model.js')
+const { getUserModel, addUserModel, getUserIdModel } = require('./model.js')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 
@@ -15,10 +15,21 @@ const getUserDetails = async (req, res) => {
     }
 }
 
-const addUserDetails = (req, res) => {
+const addUserDetails = async (req, res) => {
     const salt = bcrypt.genSaltSync(parseInt(process.env.SALTS_ROUND))
     req.body.password = bcrypt.hashSync(req.body.password, salt)
-    addUserModel(req, res)
+    const isUserRegistered = await addUserModel(req, res)
+    if (isUserRegistered.status === "success") {
+        try {
+            const loginId = await getUserIdModel(req, res)
+            let jwtToken = jwt.sign({ userid: loginId, username: req.body.username, email: req.body.email }, process.env.TOKEN_SECRET, { expiresIn: '30d' })
+            res.status(200).send({ status: 'success', msg: 'Login successful', data: jwtToken })
+        } catch (err) {
+            res.status(400).send({ status: 'failed', msg: 'User registered login failed' })
+        }
+    } else {
+        res.send(isUserRegistered)
+    }
 }
 
 module.exports = { getUserDetails, addUserDetails }
