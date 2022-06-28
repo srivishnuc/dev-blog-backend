@@ -28,5 +28,4 @@ const getComments = (req, res) => {
     getCommentsModel(req, res)
 }
 
-
 module.exports = { addBlog, selectBlog, selectAllBlog, addUserComment, addUserLike, getLikeCount, getComments }

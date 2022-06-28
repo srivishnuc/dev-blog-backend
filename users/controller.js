@@ -12,6 +12,8 @@ const getUserDetails = async (req, res) => {
         } else {
             res.status(400).send({ status: 'failed', msg: 'Invalid User' })
         }
+    } else {
+        res.send(selectedUser)
     }
 }
 
@@ -25,7 +27,7 @@ const addUserDetails = async (req, res) => {
             let jwtToken = jwt.sign({ userid: loginId, username: req.body.username, email: req.body.email }, process.env.TOKEN_SECRET, { expiresIn: '30d' })
             res.status(200).send({ status: 'success', msg: 'Login successful', data: jwtToken })
         } catch (err) {
-            res.status(400).send({ status: 'failed', msg: 'User registered login failed' })
+            res.status(400).send({ status: 'failed', msg: 'Login failed' })
         }
     } else {
         res.send(isUserRegistered)

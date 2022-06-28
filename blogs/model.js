@@ -1,6 +1,5 @@
 const { executeQuery } = require('../db/connection')
 
-
 const addBlogModel = async (req, res) => {
     const { userid } = req
     const { content, header, tagid } = req.body
