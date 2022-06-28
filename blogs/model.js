@@ -2,10 +2,24 @@ const { executeQuery } = require('../db/connection')
 
 const addBlogModel = async (req, res) => {
     const { userid } = req
-    const { content, header, tagid } = req.body
+    const { content, header, tagval } = req.body
+    let { tagid } = req.body
     try {
-        const dbResponse = await executeQuery(`Insert into blogs(userid, content,header,tagid) values($1,$2,$3,$4)`, [userid, content, header, tagid])
-        res.status(200).send(dbResponse)
+        const addNewTag = await executeQuery(`Insert into tags(name) values($1)`, [tagval])
+        if (addNewTag.status === "success") {
+            try {
+                if (tagid === "") {
+                    const addNewTagId = await executeQuery(`select tagid from tags where name = $1`, [tagval])
+                    tagid = addNewTagId.rows[0].tagid
+                }
+                const dbResponse = await executeQuery(`Insert into blogs(userid, content,header,tagid) values($1,$2,$3,$4)`, [userid, content, header, tagid])
+                res.status(200).send(dbResponse)
+            } catch (err) {
+                res.status(400).send(err)
+            }
+        } else {
+            res.status(400).send(addNewTag)
+        }
     } catch (err) {
         res.status(400).send(err)
     }
