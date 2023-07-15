@@ -28,7 +28,7 @@ const getUserModel = async (req, res) => {
       return dbResponse;
     }
   } else {
-    res.status(400).send({ status: "failed", msg: "Invalid User" });
+    res.status(403).send({ status: "failed", msg: "Invalid User" });
   }
 };
 

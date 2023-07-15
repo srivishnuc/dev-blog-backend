@@ -20,7 +20,7 @@ const getUserDetails = async (req, res) => {
         .status(200)
         .send({ status: "success", msg: "Login sucessful", data: jwtToken });
     } else {
-      res.status(400).send({ status: "failed", msg: "Invalid User" });
+      res.status(403).send({ status: "failed", msg: "Invalid User" });
     }
   } else {
     res.send(selectedUser);
@@ -43,7 +43,7 @@ const addUserDetails = async (req, res) => {
         .status(200)
         .send({ status: "success", msg: "Login successful", data: jwtToken });
     } catch (err) {
-      res.status(400).send({ status: "failed", msg: "Login failed" });
+      res.status(403).send({ status: "failed", msg: "Login failed" });
     }
   } else {
     res.send(isUserRegistered);
