@@ -1,11 +1,11 @@
 const { executeQuery } = require("../db/connection.js");
 
-const getUserIdModel = async (req, res) => {
-  const { username, email } = req.body;
+const getUserIdModel = async (req) => {
+  const { email } = req.body;
   try {
     dbResponse = await executeQuery(
-      "select userid from users where username = $1 or email = $2",
-      [username, email]
+      "select userid from users where email = $1",
+      [email]
     );
     return dbResponse.rows.length !== 0
       ? parseInt(dbResponse.rows[0].userid)
@@ -17,7 +17,7 @@ const getUserIdModel = async (req, res) => {
 
 const getUserModel = async (req, res) => {
   let dbResponse, userid;
-  userid = await getUserIdModel(req, res);
+  userid = await getUserIdModel(req);
   if (userid) {
     try {
       dbResponse = await executeQuery("select * from users where userid = $1", [
@@ -33,18 +33,18 @@ const getUserModel = async (req, res) => {
 };
 
 const addUserModel = async (req, res) => {
-  const { username, email, phone, password } = req.body;
+  const { email, phone, password, firstname } = req.body;
   let dbResponse;
   try {
-    const usernameCheck = await getUserIdModel(req, res);
-    if (usernameCheck === null) {
+    const isExistingUser = await getUserIdModel(req);
+    if (isExistingUser === null) {
       dbResponse = await executeQuery(
-        `Insert into users(username,password,email,phone) values ($1 ,$2 ,$3 ,$4 )`,
-        [username, password, email, phone]
+        `Insert into users(firstname,password,email,phone) values ($1 ,$2 ,$3 ,$4 )`,
+        [firstname, password, email, phone]
       );
       return dbResponse;
     } else {
-      return { status: "failed", msg: "Username or Email already in use" };
+      return { status: "failed", msg: "Email already in use" };
     }
   } catch (err) {
     return err;

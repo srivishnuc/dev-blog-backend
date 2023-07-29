@@ -10,7 +10,7 @@ const getUserDetails = async (req, res) => {
       let jwtToken = jwt.sign(
         {
           userid: selectedUser.rows[0].userid,
-          username: selectedUser.rows[0].username,
+          firstname: selectedUser.rows[0].firstname,
           email: selectedUser.rows[0].email,
         },
         process.env.TOKEN_SECRET,
@@ -33,9 +33,13 @@ const addUserDetails = async (req, res) => {
   const isUserRegistered = await addUserModel(req, res);
   if (isUserRegistered.status === "success") {
     try {
-      const loginId = await getUserIdModel(req, res);
+      const loginId = await getUserIdModel(req);
       let jwtToken = jwt.sign(
-        { userid: loginId, username: req.body.username, email: req.body.email },
+        {
+          userid: loginId,
+          firstname: req.body.firstname,
+          email: req.body.email,
+        },
         process.env.TOKEN_SECRET,
         { expiresIn: "30d" }
       );
