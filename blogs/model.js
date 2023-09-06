@@ -2,32 +2,13 @@ const { executeQuery } = require("../db/connection");
 
 const addBlogModel = async (req, res) => {
   const { userid } = req;
-  const { content, header, tagval, author, otherTags } = req.body;
-  let { tagid } = req.body;
+  const { content, title, author, tagids } = req.body;
   try {
-    const addNewTag = await executeQuery(`Insert into tags(name) values($1)`, [
-      tagval,
-    ]);
-    if (addNewTag.status === "success") {
-      try {
-        if (tagid === "") {
-          const addNewTagId = await executeQuery(
-            `select tagid from tags where name = $1`,
-            [tagval]
-          );
-          tagid = addNewTagId.rows[0].tagid;
-        }
-        const dbResponse = await executeQuery(
-          `Insert into blogs(userid, content,header,tagid,other_tags, author) values($1,$2,$3,$4,ARRAY[$5],$6)`,
-          [userid, content, header, tagid, otherTags, author]
-        );
-        res.status(200).send(dbResponse);
-      } catch (err) {
-        res.status(400).send(err);
-      }
-    } else {
-      res.status(400).send(addNewTag);
-    }
+    const dbResponse = await executeQuery(
+      `Insert into blogs(userid, content, title, tagids, author) values($1,$2,$3,$4,$5)`,
+      [userid, content, title, tagids, author]
+    );
+    res.status(200).send(dbResponse);
   } catch (err) {
     res.status(400).send(err);
   }
@@ -37,7 +18,7 @@ const selectBlogModel = async (req, res) => {
   const { blogid } = req.query;
   try {
     const dbResponse = await executeQuery(
-      `select row_to_json(blog) as selectedBlog from (select blogid,header,content from blogs)blog where blogid = $1`,
+      `select row_to_json(blog) as selectedBlog from (select blogid,title,content from blogs)blog where blogid = $1`,
       [blogid]
     );
     res.status(200).send(dbResponse);
@@ -49,7 +30,22 @@ const selectBlogModel = async (req, res) => {
 const selectAllBlogModel = async (req, res) => {
   try {
     const dbResponse = await executeQuery(
-      `select row_to_json(blog) as Blog from (select blogid,header,content from blogs order by created_date desc , blogid desc)blog`,
+      `select json_agg(json_build_object('blogid', blogid, 'title', title , 'content', content , 'author' , author, 'tags' , tagids )
+      order by created_date desc
+      )as blogs
+      from blogs`,
+      []
+    );
+    res.status(200).send(dbResponse);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
+
+const getTagsModel = async (req, res) => {
+  try {
+    const dbResponse = await executeQuery(
+      `select tagid,name as tagname from tags`,
       []
     );
     res.status(200).send(dbResponse);
@@ -123,4 +119,5 @@ module.exports = {
   addUserLikeModel,
   getLikeCountModel,
   getCommentsModel,
+  getTagsModel,
 };

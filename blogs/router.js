@@ -7,6 +7,7 @@ const {
   addUserLike,
   getLikeCount,
   getComments,
+  getTags,
 } = require("./controller");
 
 router.post("/addBlog", addBlog);
@@ -16,5 +17,6 @@ router.put("/comment", addUserComment);
 router.put("/like", addUserLike);
 router.get("/likeCount", getLikeCount);
 router.get("/getComments", getComments);
+router.get("/allTags", getTags);
 
 module.exports = router;
